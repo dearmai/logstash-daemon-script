@@ -131,7 +131,7 @@ case $1 in
     run)
         print "Run"
         cd ${TARGET_PATH}
-        bin/elasticsearch
+        exec bin/logstash -e
         ;;
     start)
         status_pidfile > /dev/null 2>&1
