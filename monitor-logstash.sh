@@ -4,7 +4,33 @@ SOURCE=${BASH_SOURCE[0]}
 while [ -L "$SOURCE" ]; do
   DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
   SOURCE=$(readlink "$SOURCE")
-  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
+  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCEset nocompatible
+set autoindent
+set cindent
+set smartindent
+set wrap
+set nowrapscan
+set nobackup
+set visualbell
+set ruler
+set shiftwidth=4
+set number
+set fencs=ucs-bom,utf-8,euc-kr.latin1
+set fileencoding=utf-8
+set tenc=utf-8
+set expandtab
+set hlsearch
+set ignorecase
+set tabstop=4
+set lbr
+set incsearch
+syntax on
+filetype indent on
+set background=dark
+colorscheme desert
+set backspace=eol,start,indent
+set history=1000
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab autoindent
 done
 DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
@@ -151,7 +177,7 @@ case $1 in
         do
             show_status
             if [ $(check_netstat_beats) = "alive" ] && [ -e ${PID_PATH} ]; then
-                print "elasticsearch가 정상적으로 시작됨"
+                print "${TARGET_NAME} 정상적으로 시작됨"
                 break;
             fi
             sleep 1
