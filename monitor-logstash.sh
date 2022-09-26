@@ -4,33 +4,7 @@ SOURCE=${BASH_SOURCE[0]}
 while [ -L "$SOURCE" ]; do
   DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
   SOURCE=$(readlink "$SOURCE")
-  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCEset nocompatible
-set autoindent
-set cindent
-set smartindent
-set wrap
-set nowrapscan
-set nobackup
-set visualbell
-set ruler
-set shiftwidth=4
-set number
-set fencs=ucs-bom,utf-8,euc-kr.latin1
-set fileencoding=utf-8
-set tenc=utf-8
-set expandtab
-set hlsearch
-set ignorecase
-set tabstop=4
-set lbr
-set incsearch
-syntax on
-filetype indent on
-set background=dark
-colorscheme desert
-set backspace=eol,start,indent
-set history=1000
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab autoindent
+  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
 done
 DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
 
@@ -162,9 +136,17 @@ case $1 in
     start)
         status_pidfile > /dev/null 2>&1
         if [ -e ${PID_PATH} ]; then
-            print_err "이미 실행 중 입니다."
-            echo "PID_PATH : ${PID_PATH}"
-            exit 1
+            # PID 파일이 있으나 실제 실행중이지 않을 경우 처리
+            if [ -e "/proc/$(get_pid)" ]; then
+                print_err "이미 실행 중 입니다."
+                echo "PID_PATH : ${PID_PATH}"
+                echo "PID : $(get_pid)"
+                exit 1
+            else 
+                # PID 파일 삭제
+                print "PID 파일이 존재 하나 동작중이지 않은 상태로 확인됨(PID : $(get_pid))"
+                rm -f ${PID_PATH}                
+            fi 
         else
             print "Daemon start"
         fi
